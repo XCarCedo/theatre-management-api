@@ -1,43 +1,28 @@
-from decimal import Decimal
-
 from django.db.models import F
 from rest_framework import permissions, status
-from rest_framework.request import Request
+from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
-from rest_framework.views import APIView
+
+from .serializers import ChargeSerializer
 
 
-class Charge(APIView):
-    permission_classes = [
-        permissions.IsAuthenticated,
-    ]
+class Charge(GenericAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = ChargeSerializer
 
-    def post(self, request: Request, *args, **kwargs):
-        amount = request.data.get("amount", None)
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
 
-        if amount == None:
-            return Response(
-                {"success": False, "message": "Amount is null/invalid."},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
-        try:
-            amount = Decimal(amount)
-        except:
-            return Response(
-                {
-                    "success": False,
-                    "message": "Cannot convert the given amount to a decimal value.",
-                },
-                status=status.HTTP_400_BAD_REQUEST,
-            )
+        amount = serializer.validated_data["amount"]
 
         try:
             request.user.balance = F("balance") + amount
             request.user.save()
-        except:
+            request.user.refresh_from_db()
+        except Exception:
             return Response(
-                {"success": False, "message": "An unexcepted error occured."},
+                {"success": False, "message": "An unexpected error occurred."},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
 
