@@ -5,6 +5,11 @@ from rest_framework.response import Response
 
 from .serializers import ChargeSerializer
 
+UNEXCEPTED_ERROR_RESPONSE = Response(
+    {"success": False, "message": "An unexpected error occurred."},
+    status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+)
+
 
 class Charge(GenericAPIView):
     permission_classes = [permissions.IsAuthenticated]
@@ -21,12 +26,21 @@ class Charge(GenericAPIView):
             request.user.save()
             request.user.refresh_from_db()
         except Exception:
-            return Response(
-                {"success": False, "message": "An unexpected error occurred."},
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            )
+            return UNEXCEPTED_ERROR_RESPONSE
 
         return Response(
             {"success": True, "message": "Account charged successfully"},
             status=status.HTTP_200_OK,
         )
+
+
+class Balance(GenericAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        try:
+            balance = request.user.balance
+        except:
+            return UNEXCEPTED_ERROR_RESPONSE
+
+        return Response({"success": True, "balance": balance})
