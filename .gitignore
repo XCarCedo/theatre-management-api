@@ -1,0 +1,64 @@
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environment variables / secrets
+.env
+*.env
+.env.*
+
+# Virtual environments
+venv/
+env/
+.venv/
+.python-version
+
+# Django / DRF stuff
+*.log
+staticfiles/
+static/
+media/
+mediafiles/
+
+# Migrations backups
+*/migrations/*~
+*/migrations/*.pyc
+
+# SQLite database (optional, but usually ignored for projects)
+db.sqlite3
+
+# Coverage & test artifacts
+.coverage
+coverage.xml
+htmlcov/
+
+# pytest
+.pytest_cache/
+
+# IDE / editor
+.vscode/
+.idea/
+*.iml
+
+# Mac / Windows files
+.DS_Store
+Thumbs.db
+
+# Byte-compiled & temp files
+*.tmp
+*.swp
+*.swo
+
+# Docker
+*.pid
+
+# MyPy / typing
+.mypy_cache/
+.dmypy.json
+.pyre/
+
+# Build / packaging
+build/
+dist/
+*.egg-info/
