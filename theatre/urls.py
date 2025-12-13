@@ -21,6 +21,7 @@ from django.urls import include, path
 urlpatterns = [
     # local
     path("api/v1/my/", include("users.urls")),
+    path("api/v1/theatre/", include("booking.urls")),
     # 3rd party
     path("admin/", admin.site.urls),
     path("api/v1/browsable-api-auth/", include("rest_framework.urls")),
