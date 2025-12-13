@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     "dj_rest_auth",
     # local
     "users.apps.UsersConfig",
+    "booking.apps.BookingConfig",
 ]
 
 MIDDLEWARE = [
