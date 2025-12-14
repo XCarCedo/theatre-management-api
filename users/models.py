@@ -14,7 +14,7 @@ class User(AbstractUser):
         customer = ("customer", "Customer")
         manager = ("manager", "Manager")
 
-    full_name = models.CharField(default=generate_random_name)
+    full_name = models.CharField(default=generate_random_name, max_length=50)
     role = models.CharField(max_length=8, choices=Role.choices, default=Role.customer)
     balance = models.DecimalField(
         decimal_places=2, default=Decimal("0.00"), max_digits=10
