@@ -19,3 +19,9 @@ class User(AbstractUser):
     balance = models.DecimalField(
         decimal_places=2, default=Decimal("0.00"), max_digits=10
     )
+
+    class Gender(models.TextChoices):
+        male = ("male", "Male")
+        female = ("female", "Female")
+
+    gender = models.CharField(max_length=6, default=Gender.male, choices=Gender.choices)
