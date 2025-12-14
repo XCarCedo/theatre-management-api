@@ -8,6 +8,7 @@ class Theatre(models.Model):
     seats_count = models.IntegerField()
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     available = models.BooleanField(default=True)
+    price = models.DecimalField(decimal_places=2, max_digits=10)
 
 
 class Seat(models.Model):
