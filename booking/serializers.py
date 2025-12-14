@@ -14,4 +14,4 @@ class TheatreDetailSerializer(ModelSerializer):
     class Meta:
         model = Theatre
         fields = "__all__"
-        read_only_fields = "created_by"
+        read_only_fields = ("created_by",)
