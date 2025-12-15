@@ -5,8 +5,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from .models import Seat, Theatre
-from .permissions import AdminWriteUserReadPermission
-from .serializers import TheatreDetailSerializer, TheatreListSerializer
+from .permissions import AdminOnlyPermission, AdminWriteUserReadPermission
+from .serializers import SeatSerializer, TheatreDetailSerializer, TheatreListSerializer
 
 
 class TheatreListView(generics.ListCreateAPIView):
@@ -48,6 +48,12 @@ class TheatreDetailView(generics.RetrieveUpdateDestroyAPIView):
             Seat.objects.bulk_create(new_seats)
 
         serializer.save()
+
+
+class SeatDetailView(generics.RetrieveUpdateAPIView):
+    queryset = Seat.objects.all()
+    serializer_class = SeatSerializer
+    permission_classes = [AdminOnlyPermission]
 
 
 class SeatReserveView(views.APIView):
