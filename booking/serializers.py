@@ -18,7 +18,7 @@ class TheatreDetailSerializer(ModelSerializer):
         read_only_fields = ("created_by",)
 
 
-class SeatSerializer(ModelSerializer):
+class NestedSeatSerializer(ModelSerializer):
     occupied_by = SerializerMethodField()
 
     class Meta:
@@ -59,6 +59,6 @@ class TheatreDetailSerializer(ModelSerializer):
 
     def get_seats(self, obj):
         seats_qs = Seat.objects.filter(theatre=obj)
-        return SeatSerializer(
+        return NestedSeatSerializer(
             seats_qs, many=True, context={"request": self.context.get("request")}
         ).data
