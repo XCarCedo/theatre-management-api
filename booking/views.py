@@ -29,6 +29,26 @@ class TheatreDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = TheatreDetailSerializer
     permission_classes = [AdminWriteUserReadPermission]
 
+    def perform_update(self, serializer):
+        theatre = self.get_object()
+        old_seats_count = theatre.seats_count
+        new_seats_count = serializer.validated_data.get("seats_count", old_seats_count)
+
+        if new_seats_count < old_seats_count:
+            raise serializers.ValidationError("You cannot reduce seats count.")
+        elif new_seats_count > old_seats_count:
+            new_seats = [
+                Seat(
+                    theatre=theatre,
+                    number=old_seats_count + i,
+                    price=theatre.price,
+                )
+                for i in range(new_seats_count - old_seats_count)
+            ]
+            Seat.objects.bulk_create(new_seats)
+
+        serializer.save()
+
 
 class SeatReserveView(views.APIView):
     permission_classes = [IsAuthenticated]
