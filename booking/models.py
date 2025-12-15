@@ -10,6 +10,9 @@ class Theatre(models.Model):
     available = models.BooleanField(default=True)
     price = models.DecimalField(decimal_places=2, max_digits=10)
 
+    def __str__(self):
+        return self.name
+
 
 class Seat(models.Model):
     theatre = models.ForeignKey(Theatre, on_delete=models.CASCADE)
