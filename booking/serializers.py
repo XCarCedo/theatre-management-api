@@ -34,7 +34,6 @@ class SeatSerializer(ModelSerializer):
 
         # If the seat is occupied, admins see user id and gender
         if request.user.role == "manager" or request.user.is_superuser:
-            print("manager!")
             return {
                 "id": obj.occupied_by.id,
                 "gender": obj.occupied_by.gender,
