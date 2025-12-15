@@ -10,7 +10,7 @@ from .serializers import TheatreDetailSerializer, TheatreListSerializer
 
 
 class TheatreListView(generics.ListCreateAPIView):
-    queryset = Theatre.objects.all()
+    queryset = Theatre.objects.filter(available=True)
     serializer_class = TheatreListSerializer
     permission_classes = [AdminWriteUserReadPermission]
 
