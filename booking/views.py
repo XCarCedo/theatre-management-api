@@ -52,4 +52,12 @@ class SeatReserveView(views.APIView):
         seat.occupied_by = request.user
         seat.save()
 
+        current_theatre_seats = Seat.objects.filter(theatre=seat.theatre)
+        current_theatre_seats = map(
+            lambda seat: seat.occupied_by, current_theatre_seats
+        )
+        if all(current_theatre_seats):
+            seat.theatre.available = False
+            seat.theatre.save()
+
         return Response({"ok": True, "message": "Seat reserved"})
