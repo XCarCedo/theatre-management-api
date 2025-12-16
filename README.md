@@ -20,8 +20,8 @@ A RESTful backend application for managing theatres, and reservations, built usi
 ## Setup
 
 ```bash
-git clone https://github.com/yourusername/theatre-management.git
-cd theatre-management
+git clone https://github.com/XCarCedo/theatre-management-api.git
+cd theatre-management-api
 python -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
