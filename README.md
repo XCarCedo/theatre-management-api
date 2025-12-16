@@ -28,3 +28,6 @@ pip install -r requirements.txt
 python manage.py migrate
 python manage.py runserver
 ```
+
+## Docs
+Docs available at /api/v1/docs/swagger and /api/v1/docs/redoc
