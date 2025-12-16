@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     "allauth.socialaccount",
     "dj_rest_auth",
     "corsheaders",
+    "drf_spectacular",
     # local
     "users.apps.UsersConfig",
     "booking.apps.BookingConfig",
@@ -71,6 +72,13 @@ REST_FRAMEWORK = {
         "rest_framework.authentication.SessionAuthentication",
         "rest_framework.authentication.TokenAuthentication",
     ],
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+}
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "Theatre managment API",
+    "DESCRIPTION": "A role-based theatre managment API.",
+    "VERSION": "1.0.0",
 }
 
 CORS_ALLOWED_ORIGINS = (
