@@ -1,5 +1,3 @@
-from re import S
-
 from rest_framework.fields import SerializerMethodField
 from rest_framework.serializers import ModelSerializer
 
@@ -11,13 +9,6 @@ class TheatreListSerializer(ModelSerializer):
         model = Theatre
         fields = "__all__"
         read_only_fields = ("created_by", "available")
-
-
-class TheatreDetailSerializer(ModelSerializer):
-    class Meta:
-        model = Theatre
-        fields = "__all__"
-        read_only_fields = ("created_by",)
 
 
 class SeatSerializer(ModelSerializer):
