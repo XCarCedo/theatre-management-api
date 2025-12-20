@@ -3,6 +3,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework import generics, status, views
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.serializers import ValidationError
 
 from .models import Seat, Theatre
 from .permissions import AdminOnlyPermission, AdminWriteUserReadPermission
@@ -35,7 +36,7 @@ class TheatreDetailView(generics.RetrieveUpdateDestroyAPIView):
         new_seats_count = serializer.validated_data.get("seats_count", old_seats_count)
 
         if new_seats_count < old_seats_count:
-            raise serializers.ValidationError("You cannot reduce seats count.")
+            raise ValidationError("You cannot reduce seats count.")
         elif new_seats_count > old_seats_count:
             new_seats = [
                 Seat(
