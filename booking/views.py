@@ -20,6 +20,13 @@ class TheatreListView(generics.ListCreateAPIView):
     permission_classes = [AdminWriteUserReadPermission]
 
     def perform_create(self, serializer):
+        """Creates the theatre with created_by set as the user sending the request and
+        also creates n seats and links them to the created theatre
+
+        Args:
+            serializer (rest_framework.serializers.ModelSerializer): Current serializer
+            of this view
+        """
         theatre = serializer.save(created_by=self.request.user)
 
         seats = [
@@ -35,6 +42,16 @@ class TheatreDetailView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [AdminWriteUserReadPermission]
 
     def perform_update(self, serializer):
+        """Makes sure the seats_count of a theatre model can only be increased and new seats
+        are added to the database when that happens
+
+        Args:
+            serializer (rest_framework.serializer.ModelSerializer): Current serializer
+            of this class
+
+        Raises:
+            ValidationError: In case the updated seats_count value is lesser then the previous one
+        """
         theatre = self.get_object()
         old_seats_count = theatre.seats_count
         new_seats_count = serializer.validated_data.get(
@@ -67,6 +84,16 @@ class SeatReserveView(views.APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request, pk):
+        """Reserves a seat if its not already reserved and the user has enough balance
+        Also makes the theatre unavailable if all seats are reserved by now
+
+        Args:
+            request (rest_framework.request.Request): Request object
+            pk (int): Primary key of requested seat
+
+        Returns:
+            rest_framework.response.Response: Status and message of the request
+        """
         seat = get_object_or_404(Seat, pk=pk)
 
         if seat.occupied_by is not None:

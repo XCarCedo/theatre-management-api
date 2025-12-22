@@ -18,16 +18,31 @@ class SeatSerializer(ModelSerializer):
 
 
 class NestedSeatSerializer(ModelSerializer):
+    """Filters the data for normal users/admins, while the normal users can
+    see either a seat occupied are not, and by which gender the admins also
+    can see the user id of the user who reserved this seat
+    """
+
     occupied_by = SerializerMethodField()
 
     class Meta:
         model = Seat
-        fields = ["id", "occupied_by"]  # only these fields
+        fields = ["id", "occupied_by"]
 
     def get_occupied_by(self, obj):
+        """Returns the status of requested seat (occupied, gender) for normal users while admins
+        can also see the user id of the user who reserved the seat
+
+        Args:
+            obj (django.db.models.Model): The requested seat model this serializer
+            is representing
+
+        Returns:
+            dict: The status of this seat
+        """
         request = self.context.get("request")
 
-        # If the seat is not occupied by anyone the result is same for admin/users
+        # If the seat is not occupied by anyone the result is same for admins/users
         if not obj.occupied_by:
             return {"is_occupied": False}
 
@@ -57,6 +72,18 @@ class TheatreDetailSerializer(ModelSerializer):
         ]
 
     def get_seats(self, obj):
+        """Since seats are not a theatre property, all seat objects that have the requested
+        theatre set as their theatre will be queried and returned through another serializer
+        so the data can be filtered for normal user/admins
+
+        Args:
+            obj (django.db.models.Model): The requested theatre model object this serializer
+            is representing
+
+        Returns:
+            ModelSerializer: An instance of NestedSeatSerializer for more control over the
+            data users will see
+        """
         seats_qs = Seat.objects.filter(theatre=obj)
         return NestedSeatSerializer(
             seats_qs,

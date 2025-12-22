@@ -9,6 +9,8 @@ User = get_user_model()
 
 
 class BookingTests(APITestCase):
+    """Tests for reservation and creation and manipulation of theatres from users and admins"""
+
     def setUp(self):
         # manager (allowed to create theatres) and a regular customer
         self.manager = User.objects.create_user(
@@ -36,6 +38,18 @@ class BookingTests(APITestCase):
         )
 
     def _create_theatre_via_api(self, user, name, seats_count, price):
+        """Creates a theatre object through the authentication of given user which can only
+        be an admin or a superuser
+
+        Args:
+            user (AbstractUser): The user which the theatre will be created by
+            name (str): Name of the theatre
+            seats_count (int): Number of seats the theatre has
+            price (Decimal): The price of given theatre for reserving each seat
+
+        Returns:
+            rest_framework.response.Response: Data of created theatre
+        """
         self.client.force_authenticate(user=user)
         data = {"name": name, "seats_count": seats_count, "price": price}
         response = self.client.post(reverse("theatre_list"), data)
@@ -54,6 +68,7 @@ class BookingTests(APITestCase):
         self.assertEqual(self.theatre3.status_code, status.HTTP_201_CREATED)
 
     def test_list_theatres(self):
+        """Tests the theatre list endpoint"""
         self.client.force_authenticate(user=self.customer)
         response = self.client.get(reverse("theatre_list"))
         data = response.json()
@@ -63,6 +78,7 @@ class BookingTests(APITestCase):
         self.assertEqual(data[2]["id"], self.theatre3.json()["id"])
 
     def test_theatre_detail_update(self):
+        """Tests the updating of seats count, seats should only be increased when updating"""
         self.client.force_authenticate(user=self.manager)
         response_valid = self.client.patch(
             reverse(

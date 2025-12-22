@@ -2,6 +2,9 @@ from rest_framework.permissions import SAFE_METHODS, BasePermission
 
 
 class AdminWriteUserReadPermission(BasePermission):
+    """Permission only allows normal users to send safe methods (GET, HEAD, OPTIONS)
+    while admins are allowed to send anything (POST, DEL, etc...)"""
+
     def has_permission(self, request, view):
         if not request.user.is_authenticated:
             return False
