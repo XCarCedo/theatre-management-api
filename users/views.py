@@ -40,7 +40,7 @@ class Balance(GenericAPIView):
     def get(self, request, *args, **kwargs):
         try:
             balance = request.user.balance
-        except:
+        except Exception:
             return UNEXCEPTED_ERROR_RESPONSE
 
         return Response({"success": True, "balance": balance})
