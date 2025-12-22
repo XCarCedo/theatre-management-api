@@ -7,7 +7,11 @@ from rest_framework.serializers import ValidationError
 
 from .models import Seat, Theatre
 from .permissions import AdminOnlyPermission, AdminWriteUserReadPermission
-from .serializers import SeatSerializer, TheatreDetailSerializer, TheatreListSerializer
+from .serializers import (
+    SeatSerializer,
+    TheatreDetailSerializer,
+    TheatreListSerializer,
+)
 
 
 class TheatreListView(generics.ListCreateAPIView):
@@ -33,7 +37,9 @@ class TheatreDetailView(generics.RetrieveUpdateDestroyAPIView):
     def perform_update(self, serializer):
         theatre = self.get_object()
         old_seats_count = theatre.seats_count
-        new_seats_count = serializer.validated_data.get("seats_count", old_seats_count)
+        new_seats_count = serializer.validated_data.get(
+            "seats_count", old_seats_count
+        )
 
         if new_seats_count < old_seats_count:
             raise ValidationError("You cannot reduce seats count.")

@@ -59,5 +59,7 @@ class TheatreDetailSerializer(ModelSerializer):
     def get_seats(self, obj):
         seats_qs = Seat.objects.filter(theatre=obj)
         return NestedSeatSerializer(
-            seats_qs, many=True, context={"request": self.context.get("request")}
+            seats_qs,
+            many=True,
+            context={"request": self.context.get("request")},
         ).data
